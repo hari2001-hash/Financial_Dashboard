@@ -22,4 +22,6 @@ const transactionSchema = new mongoose.Schema({
   notes: { type: String },
 }, { timestamps: true });
 
+
+
 module.exports = mongoose.models.Transaction || mongoose.model("Transaction", transactionSchema);

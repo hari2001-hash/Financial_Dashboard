@@ -782,11 +782,19 @@ app.post('/api/register', async (req, res) => {
 });
 
 
-const transactionsRouter = require("./routes/Transaction");
+const transactionsRouter = require("./routes/Transactions");
 app.use("/api/transactions", transactionsRouter);
 
 const uploadStatementRouter = require("./routes/UploadStatement");
 app.use("/api/upload-statement", uploadStatementRouter);
+
+
+const transactionRoutes = require("./routes/Transactions");
+app.use("/api/transactions", transactionRoutes);
+app.use("/api/asset", require("./routes/asset"));
+app.use("/api/liability", require("./routes/liability"));
+
+
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
