@@ -6,6 +6,7 @@ import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
   LineChart, Line, XAxis, YAxis, Legend, CartesianGrid
 } from "recharts";
+import BudgetSection from "../Budget/BudgetSection";
 
 const COLORS = ["#00C49F", "#FF8042", "#FFBB28", "#0088FE", "#FF6384", "#36A2EB", "#FFCE56", "#A28EFF"];
 
@@ -1181,6 +1182,7 @@ export default function Dashboard() {
           )}
         </div>
       </div>
+      <BudgetSection/>
     </div>
   );
 }

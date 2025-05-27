@@ -721,6 +721,11 @@
   "resolved" "https://registry.npmjs.org/node-gyp-build/-/node-gyp-build-4.8.4.tgz"
   "version" "4.8.4"
 
+"nodemailer@^7.0.3":
+  "integrity" "sha512-Ajq6Sz1x7cIK3pN6KesGTah+1gnwMnx5gKl3piQlQQE/PwyJ4Mbc8is2psWYxK3RJTVeqsDaCv8ZzXLCDHMTZw=="
+  "resolved" "https://registry.npmjs.org/nodemailer/-/nodemailer-7.0.3.tgz"
+  "version" "7.0.3"
+
 "oauth@0.10.x":
   "integrity" "sha512-JtFnB+8nxDEXgNyniwz573xxbKSOu3R8D40xQKqcjwJ2CDkYqUDI53o6IuzDJBx60Z8VKCm271+t8iFjakrl8Q=="
   "resolved" "https://registry.npmjs.org/oauth/-/oauth-0.10.2.tgz"
