@@ -18,7 +18,6 @@
 //   return transporter.sendMail(mailOptions);
 // };
 
-
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
@@ -30,7 +29,9 @@ const transporter = nodemailer.createTransport({
 });
 
 exports.sendBudgetAlertEmail = async (to, category, budget, spent) => {
-  console.log("Calling sendBudgetAlertEmail for", to, category, budget, spent); // <-- Added log
+  // Log before sending mail
+  console.log("Calling sendBudgetAlertEmail for", to, category, budget, spent);
+
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to,
@@ -39,9 +40,11 @@ exports.sendBudgetAlertEmail = async (to, category, budget, spent) => {
   };
   try {
     const info = await transporter.sendMail(mailOptions);
+    // Log after mail is sent successfully
     console.log("Mail sent: ", info.response);
     return info;
   } catch (err) {
+    // Log if sending fails
     console.error("Error sending mail:", err);
     throw err;
   }

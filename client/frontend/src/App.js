@@ -4,6 +4,7 @@ import Register from './component/Register';
 import Dashboard from './component/Dashboard/Dashboard';  // Make sure you have this component created
 import './App.css';
 import LoginPage from './component/Login/login';
+import BudgetSection from './component/Budget/BudgetSection';
 
 function App() {
   return (
@@ -15,6 +16,8 @@ function App() {
 
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/login" element={<LoginPage/>} />
+           <Route path="/budget" element={<BudgetSection/>} />
+
 
         </Routes>
       </Router>
