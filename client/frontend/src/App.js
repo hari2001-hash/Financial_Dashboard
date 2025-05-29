@@ -5,6 +5,7 @@ import Dashboard from './component/Dashboard/Dashboard';  // Make sure you have 
 import './App.css';
 import LoginPage from './component/Login/login';
 import BudgetSection from './component/Budget/BudgetSection';
+import ProfilePage from './component/ProfileUpdate/ProfilePage';
 
 function App() {
   return (
@@ -17,8 +18,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/login" element={<LoginPage/>} />
            <Route path="/budget" element={<BudgetSection/>} />
-
-
+             <Route path="/profile" element={<ProfilePage/>} />
         </Routes>
       </Router>
     </div>

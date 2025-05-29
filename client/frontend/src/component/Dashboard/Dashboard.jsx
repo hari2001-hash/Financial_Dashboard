@@ -542,6 +542,23 @@ export default function Dashboard() {
               <div style={{ color: "#666", fontSize: 15 }}>{user.email}</div>
             </div>
           </div>
+              {/* <a
+            href="/profile"
+            style={{
+              background: "linear-gradient(90deg, #0ba29d, #c3ec52)",
+              color: "#fff",
+              border: "none",
+              borderRadius: 6,
+              padding: "10px 26px",
+              fontWeight: 600,
+              fontSize: 16,
+              textDecoration: "none",
+              boxShadow: "0 2px 8px rgba(11,162,157,0.09)",
+              transition: "background 0.2s",
+            }}
+          >
+            Profile
+          </a> */}
           <a
             href="/budget"
             style={{

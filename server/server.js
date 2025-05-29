@@ -455,8 +455,12 @@ app.use("/api/asset", require("./routes/asset"));
 app.use("/api/liability", require("./routes/liability"));
 app.use("/api/budgets", require("./routes/budgets"));
 app.use("/api/alerts", require("./routes/alerts"));
+const profileRouter = require("./routes/profile");
+app.use("/api/profile", profileRouter);
 
 
+// const profileRouter = require("./routes/profile");
+// app.use("/api/profile", profileRouter);
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
