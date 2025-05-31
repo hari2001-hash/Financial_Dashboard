@@ -1,4 +1,9 @@
+
+
+
 // import React, { useState, useRef } from "react";
+
+// const API_BASE = "http://localhost:5000";
 
 // export default function SecurityAndDataSettings() {
 //   // 2FA State
@@ -22,7 +27,7 @@
 //     setSecret("");
 //     setToken("");
 //     try {
-//       const res = await fetch("http://localhost:5000/api/profile/2fa/setup", { credentials: "include" });
+//       const res = await fetch(`${API_BASE}/api/profile/2fa/setup`, { credentials: "include" });
 //       if (!res.ok) throw new Error("Failed to start 2FA setup");
 //       const data = await res.json();
 //       setQrCode(data.qr);
@@ -38,7 +43,7 @@
 //     setTwoFAStatus("");
 //     setTwoFAError("");
 //     try {
-//       const res = await fetch("/2fa/verify", {
+//       const res = await fetch(`${API_BASE}/api/profile/2fa/verify`, {
 //         method: "POST",
 //         headers: { "Content-Type": "application/json" },
 //         credentials: "include",
@@ -58,7 +63,7 @@
 
 //   // Export Handler
 //   const handleExport = () => {
-//     window.location.href = "/api/profile/export";
+//     window.location.href = `${API_BASE}/api/profile/export`;
 //   };
 
 //   // Import Handler
@@ -73,7 +78,7 @@
 //     const formData = new FormData();
 //     formData.append("file", file);
 //     try {
-//       const res = await fetch("/api/profile/import", {
+//       const res = await fetch(`${API_BASE}/api/profile/import`, {
 //         method: "POST",
 //         credentials: "include",
 //         body: formData,
@@ -84,6 +89,7 @@
 //         return;
 //       }
 //       setImportMsg("Import successful!");
+//       fileInputRef.current.value = "";
 //     } catch {
 //       setImportMsg("Import failed.");
 //     }
@@ -139,25 +145,11 @@
 //         )}
 //       </section>
 
-//       {/* Export Section */}
-//       <section style={{ marginBottom: 32 }}>
-//         <h3>Export Your Data</h3>
-//         <button onClick={handleExport}>Download CSV</button>
-//       </section>
+     
 
-//       {/* Import Section */}
-//       <section>
-//         <h3>Import Data (CSV)</h3>
-//         <form onSubmit={handleImport}>
-//           <input ref={fileInputRef} type="file" accept=".csv" />
-//           <button type="submit" style={{ marginLeft: 8 }}>Import</button>
-//         </form>
-//         {importMsg && <div style={{ marginTop: 8, color: importMsg.includes("success") ? "green" : "red" }}>{importMsg}</div>}
-//       </section>
 //     </div>
 //   );
 // }
-
 
 import React, { useState, useRef } from "react";
 
@@ -171,10 +163,27 @@ export default function SecurityAndDataSettings() {
   const [token, setToken] = useState("");
   const [twoFAStatus, setTwoFAStatus] = useState("");
   const [twoFAError, setTwoFAError] = useState("");
+  const [twoFAEnabled, setTwoFAEnabled] = useState(false);
 
   // Import/Export State
   const [importMsg, setImportMsg] = useState("");
   const fileInputRef = useRef();
+
+  // Check if 2FA is enabled (you may want to call this on mount)
+  const fetch2FAStatus = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/user`, { credentials: "include" });
+      if (res.ok) {
+        const data = await res.json();
+        setTwoFAEnabled(!!data.twoFactorEnabled);
+      }
+    } catch {}
+  };
+
+  // Run on mount
+  React.useEffect(() => {
+    fetch2FAStatus();
+  }, []);
 
   // 2FA Setup Handler
   const handleEnable2FA = async () => {
@@ -185,6 +194,7 @@ export default function SecurityAndDataSettings() {
     setSecret("");
     setToken("");
     try {
+      // This GET returns secret/qr (user has NOT enabled 2FA yet)
       const res = await fetch(`${API_BASE}/api/profile/2fa/setup`, { credentials: "include" });
       if (!res.ok) throw new Error("Failed to start 2FA setup");
       const data = await res.json();
@@ -214,8 +224,30 @@ export default function SecurityAndDataSettings() {
       }
       setTwoFAStatus("2FA enabled successfully!");
       setShow2FAModal(false);
+      setTwoFAEnabled(true);
     } catch {
       setTwoFAError("Verification failed.");
+    }
+  };
+
+  // 2FA Disable Handler
+  const handleDisable2FA = async () => {
+    setTwoFAStatus("");
+    setTwoFAError("");
+    try {
+      const res = await fetch(`${API_BASE}/api/profile/2fa/disable`, {
+        method: "POST",
+        credentials: "include"
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setTwoFAError(data.error || "Failed to disable 2FA.");
+        return;
+      }
+      setTwoFAStatus("2FA disabled.");
+      setTwoFAEnabled(false);
+    } catch {
+      setTwoFAError("Failed to disable 2FA.");
     }
   };
 
@@ -259,9 +291,15 @@ export default function SecurityAndDataSettings() {
       {/* 2FA Section */}
       <section style={{ marginBottom: 32 }}>
         <h3>Two-Factor Authentication (2FA)</h3>
-        <button onClick={handleEnable2FA} style={{ marginBottom: 10 }}>
-          Enable 2FA
-        </button>
+        {!twoFAEnabled ? (
+          <button onClick={handleEnable2FA} style={{ marginBottom: 10 }}>
+            Enable 2FA
+          </button>
+        ) : (
+          <button onClick={handleDisable2FA} style={{ marginBottom: 10 }}>
+            Disable 2FA
+          </button>
+        )}
         {twoFAStatus && <div style={{ color: "green", marginTop: 8 }}>{twoFAStatus}</div>}
         {twoFAError && <div style={{ color: "red", marginTop: 8 }}>{twoFAError}</div>}
         {show2FAModal && (
@@ -302,9 +340,7 @@ export default function SecurityAndDataSettings() {
           </div>
         )}
       </section>
-
      
-
     </div>
   );
 }
