@@ -6,6 +6,8 @@ import './App.css';
 import LoginPage from './component/Login/login';
 import BudgetSection from './component/Budget/BudgetSection';
 import ProfilePage from './component/ProfileUpdate/ProfilePage';
+import SecurityAndDataSettings from './component/MFA/SecurityAndDataSettings';
+import RegisterPage from './component/Register';
 
 function App() {
   return (
@@ -19,6 +21,11 @@ function App() {
           <Route path="/login" element={<LoginPage/>} />
            <Route path="/budget" element={<BudgetSection/>} />
              <Route path="/profile" element={<ProfilePage/>} />
+            <Route path="/mfa" element={<SecurityAndDataSettings />} />
+             <Route path="/register" element={<RegisterPage />} />
+
+
+           
         </Routes>
       </Router>
     </div>

@@ -1,8 +1,6 @@
 
 
 
-
-
 // require('dotenv').config();
 // const express = require('express');
 // const session = require('express-session');
@@ -15,7 +13,8 @@
 
 // // MongoDB connection
 // const MONGO_URI = process.env.MONGO_URI || 'your-mongo-uri-here';
-// mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+// // You can remove deprecated options:
+// mongoose.connect(MONGO_URI)
 //   .then(() => console.log('MongoDB connected!'))
 //   .catch(err => console.log('MongoDB connection error:', err));
 
@@ -114,17 +113,23 @@
 //   res.status(401).send('Login failed');
 // });
 
-// // ======= LOGIN ENDPOINT =======
+// // ======= LOGIN ENDPOINT (keep only one) =======
 // app.post('/api/login', async (req, res) => {
 //   try {
 //     const { email, password } = req.body;
 //     // Only allow login for non-OAuth (form) users
 //     const user = await Register.findOne({ email, oauthProvider: { $exists: false } });
-//     if (!user || user.password !== password) {
+//     if (!user) {
+//       return res.status(401).json({ error: "Invalid email or password." });
+//     }
+//     if (user.password !== password) {
 //       return res.status(401).json({ error: "Invalid email or password." });
 //     }
 //     req.login(user, (err) => {
-//       if (err) return res.status(500).json({ error: "Login failed." });
+//       if (err) {
+//         console.error("Passport req.login error:", err);
+//         return res.status(500).json({ error: "Login failed." });
+//       }
 //       return res.status(200).json({
 //         message: "Login successful!",
 //         user: {
@@ -135,6 +140,7 @@
 //       });
 //     });
 //   } catch (err) {
+//     console.error("Login server error:", err);
 //     res.status(500).json({ error: 'Server error.' });
 //   }
 // });
@@ -166,9 +172,13 @@
 
 // // Logout route
 // app.get('/logout', (req, res) => {
+//   // If you're using Passport 0.6+, you can use callback
 //   req.logout(() => {
 //     res.redirect('/');
 //   });
+//   // Otherwise, for older versions:
+//   // req.logout();
+//   // res.redirect('/');
 // });
 
 // // Home route
@@ -196,42 +206,40 @@
 //   }
 // });
 
-// app.post('/api/login', async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-//     // Only allow login for non-OAuth (form) users
-//     const user = await Register.findOne({ email, oauthProvider: { $exists: false } });
-//     if (!user) {
-//       return res.status(401).json({ error: "Invalid email or password." });
-//     }
-//     if (user.password !== password) {
-//       return res.status(401).json({ error: "Invalid email or password." });
-//     }
 
-//     req.login(user, (err) => {
-//       if (err) {
-//         console.error("Passport req.login error:", err);
-//         return res.status(500).json({ error: "Login failed." });
-//       }
-//       return res.status(200).json({
-//         message: "Login successful!",
-//         user: {
-//           id: user._id,
-//           name: user.name,
-//           email: user.email,
-//         }
-//       });
-//     });
-//   } catch (err) {
-//     console.error("Login server error:", err);
-//     res.status(500).json({ error: 'Server error.' });
-//   }
-// });
+// const transactionsRouter = require("./routes/Transactions");
+// app.use("/api/transactions", transactionsRouter);
+
+// const uploadStatementRouter = require("./routes/UploadStatement");
+// app.use("/api/upload-statement", uploadStatementRouter);
+
+
+// const transactionRoutes = require("./routes/Transactions");
+// app.use("/api/transactions", transactionRoutes);
+// app.use("/api/asset", require("./routes/asset"));
+// app.use("/api/liability", require("./routes/liability"));
+// app.use("/api/budgets", require("./routes/budgets"));
+// app.use("/api/alerts", require("./routes/alerts"));
+// app.use(express.json()); // <-- Make sure this is present!
+// const profileRouter = require("./routes/profile");
+// app.use("/api/profile", profileRouter);
+
+
+// // const profileRouter = require("./routes/profile");
+// // app.use("/api/profile", profileRouter);
 // // Start server
 // const PORT = process.env.PORT || 5000;
 // app.listen(PORT, () => {
 //   console.log(`Server running on http://localhost:${PORT}`);
 // });
+
+
+
+
+
+
+
+
 
 
 
@@ -248,22 +256,12 @@ const app = express();
 
 // MongoDB connection
 const MONGO_URI = process.env.MONGO_URI || 'your-mongo-uri-here';
-// You can remove deprecated options:
 mongoose.connect(MONGO_URI)
   .then(() => console.log('MongoDB connected!'))
   .catch(err => console.log('MongoDB connection error:', err));
 
-// Registration schema/model (supports both normal and OAuth users)
-const registerSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  password: String, // nullable for OAuth users
-  phone: String,
-  oauthProvider: String, // e.g., "google"
-  oauthId: String,       // Google profile id
-  photo: String          // profile photo URL
-});
-const Register = mongoose.model('Register', registerSchema);
+// User schema/model (supports both normal and OAuth users)
+const User = require('./models/User'); // use your model in models/User.js
 
 // CORS middleware (before routes)
 app.use(cors({
@@ -293,7 +291,7 @@ passport.serializeUser((user, done) => {
 // Deserialize user by mongo _id
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = await Register.findById(id);
+    const user = await User.findById(id);
     done(null, user);
   } catch (err) {
     done(err, null);
@@ -309,10 +307,10 @@ passport.use(new GoogleStrategy({
   async function(accessToken, refreshToken, profile, cb) {
     try {
       // Try to find user in DB by provider and id
-      let user = await Register.findOne({ oauthProvider: 'google', oauthId: profile.id });
+      let user = await User.findOne({ oauthProvider: 'google', oauthId: profile.id });
       if (!user) {
         // If not found, create a new user
-        user = await Register.create({
+        user = await User.create({
           name: profile.displayName,
           email: profile.emails[0].value,
           oauthProvider: 'google',
@@ -353,7 +351,7 @@ app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     // Only allow login for non-OAuth (form) users
-    const user = await Register.findOne({ email, oauthProvider: { $exists: false } });
+    const user = await User.findOne({ email, oauthProvider: { $exists: false } });
     if (!user) {
       return res.status(401).json({ error: "Invalid email or password." });
     }
@@ -407,13 +405,9 @@ app.get('/dashboard', (req, res) => {
 
 // Logout route
 app.get('/logout', (req, res) => {
-  // If you're using Passport 0.6+, you can use callback
   req.logout(() => {
     res.redirect('/');
   });
-  // Otherwise, for older versions:
-  // req.logout();
-  // res.redirect('/');
 });
 
 // Home route
@@ -429,11 +423,11 @@ app.post('/api/register', async (req, res) => {
       return res.status(400).json({ error: 'Name, email, and password are required.' });
     }
     // Ensure not already registered with this email (either normal or OAuth)
-    const exists = await Register.findOne({ email });
+    const exists = await User.findOne({ email });
     if (exists) {
       return res.status(409).json({ error: 'Email already registered.' });
     }
-    const newUser = new Register({ name, email, password, phone });
+    const newUser = new User({ name, email, password, phone });
     await newUser.save();
     res.status(201).json({ message: 'Registration successful!' });
   } catch (err) {
@@ -441,13 +435,11 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-
 const transactionsRouter = require("./routes/Transactions");
 app.use("/api/transactions", transactionsRouter);
 
 const uploadStatementRouter = require("./routes/UploadStatement");
 app.use("/api/upload-statement", uploadStatementRouter);
-
 
 const transactionRoutes = require("./routes/Transactions");
 app.use("/api/transactions", transactionRoutes);
@@ -455,13 +447,10 @@ app.use("/api/asset", require("./routes/asset"));
 app.use("/api/liability", require("./routes/liability"));
 app.use("/api/budgets", require("./routes/budgets"));
 app.use("/api/alerts", require("./routes/alerts"));
+app.use(express.json()); // <-- Make sure this is present!
 const profileRouter = require("./routes/profile");
 app.use("/api/profile", profileRouter);
 
-
-// const profileRouter = require("./routes/profile");
-// app.use("/api/profile", profileRouter);
-// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

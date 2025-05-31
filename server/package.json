@@ -27,6 +27,8 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "prisma": "^6.8.2",
-    "react-router-dom": "^7.6.0"
+    "qrcode": "^1.5.4",
+    "react-router-dom": "^7.6.0",
+    "speakeasy": "^2.0.0"
   }
 }
