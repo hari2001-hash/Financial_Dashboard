@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Register from './component/Register';
 import Dashboard from './component/Dashboard/Dashboard';  // Make sure you have this component created
 import './App.css';
@@ -10,6 +10,27 @@ import SecurityAndDataSettings from './component/MFA/SecurityAndDataSettings';
 import RegisterPage from './component/Register';
 
 function App() {
+  // Global dark mode state
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem("theme");
+    return saved === "dark";
+  });
+
+  const toggleDarkMode = () => {
+    setDarkMode((prev) => {
+      const newMode = !prev;
+      localStorage.setItem("theme", newMode ? "dark" : "light");
+      return newMode;
+    });
+  };
+
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  }, [darkMode]);
   return (
     <div className="App">
       <Router>
@@ -17,12 +38,23 @@ function App() {
           {/* Home route */}
           <Route path="/" element={<Register />} /> 
 
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+          <Route
+          path="/dashboard"
+          element={
+            <Dashboard
+              darkMode={darkMode}
+              toggleDarkMode={toggleDarkMode}
+            />
+          }
+        />
           <Route path="/login" element={<LoginPage/>} />
            <Route path="/budget" element={<BudgetSection/>} />
              <Route path="/profile" element={<ProfilePage/>} />
             <Route path="/mfa" element={<SecurityAndDataSettings />} />
              <Route path="/register" element={<RegisterPage />} />
+                
+
 
 
            

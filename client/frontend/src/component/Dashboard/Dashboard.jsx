@@ -14,7 +14,7 @@ function formatCurrency(amount) {
   return amount?.toLocaleString("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 2 }) || "₹0.00";
 }
 
-export default function Dashboard() {
+export default function Dashboard({ darkMode, toggleDarkMode }) {
   const [user, setUser] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [assets, setAssets] = useState([]);
@@ -527,8 +527,22 @@ export default function Dashboard() {
   if (!user) return null;
 
   return (
-    <div style={{ minHeight: "100vh", background: "linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%)", padding: "0 0 40px 0" }}>
+    <div style={{ minHeight: "100vh", background: "linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%)", padding: "0 0 40px 0" ,padding: 30,
+        minHeight: "100vh",
+        background: darkMode ? "#181818" : "#f5f5f5",
+        color: darkMode ? "#f6f6f6" : "#181818",
+        transition: "background 0.3s, color 0.3s"}}>
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "40px 0 0 0" }}>
+         
+    
+    
+      <div style={{ textAlign: "right", marginBottom: 20 }}>
+        <button onClick={toggleDarkMode}>
+          {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+        </button>
+      </div>
+      <h1>Dashboard</h1>
+      {/* ...rest of your dashboard content... */}
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
           <div style={{ display: "flex", alignItems: "center" }}>
