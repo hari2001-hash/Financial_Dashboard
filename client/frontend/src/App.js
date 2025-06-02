@@ -49,7 +49,7 @@ function App() {
           }
         />
           <Route path="/login" element={<LoginPage/>} />
-           <Route path="/budget" element={<BudgetSection/>} />
+           <Route path="/budget" element={<BudgetSection darkMode={darkMode}/>} />
              <Route path="/profile" element={<ProfilePage/>} />
             <Route path="/mfa" element={<SecurityAndDataSettings />} />
              <Route path="/register" element={<RegisterPage />} />
