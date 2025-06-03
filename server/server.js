@@ -225,6 +225,8 @@ const profileRouter = require("./routes/profile");
 app.use("/api/profile", profileRouter);
 
 
+const goalsRoutes = require('./routes/goals');
+app.use('/api/goals', goalsRoutes);
 // const profileRouter = require("./routes/profile");
 // app.use("/api/profile", profileRouter);
 // Start server

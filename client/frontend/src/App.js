@@ -8,6 +8,7 @@ import BudgetSection from './component/Budget/BudgetSection';
 import ProfilePage from './component/ProfileUpdate/ProfilePage';
 import SecurityAndDataSettings from './component/MFA/SecurityAndDataSettings';
 import RegisterPage from './component/Register';
+import GoalDashboard from "./component/Goal/GoalProgressBar";
 
 function App() {
   // Global dark mode state
@@ -53,7 +54,8 @@ function App() {
              <Route path="/profile" element={<ProfilePage/>} />
             <Route path="/mfa" element={<SecurityAndDataSettings />} />
              <Route path="/register" element={<RegisterPage />} />
-                
+            <Route path="/goal" element={<GoalDashboard/>} />
+
 
 
 
