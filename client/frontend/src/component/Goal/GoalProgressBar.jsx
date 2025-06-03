@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./GoalDashboard.css"; // Import the CSS file
+import "./GoalDashboard.css";
 
 const API_URL = "http://localhost:5000/api/goals";
 const USER_ID = "USER123"; // Replace with your authentication logic
@@ -113,16 +113,20 @@ export default function GoalDashboard() {
           <button className="goal-create-btn" type="submit">Create Goal</button>
         </form>
       )}
+      <h3 className="goal-list-title">Your Goals</h3>
       <ul className="goal-list">
+        {goals.length === 0 && (
+          <li className="goal-empty">No goals added yet. Start by adding a new goal!</li>
+        )}
         {goals.map((g) => (
           <li key={g._id} className="goal-item">
             <div className="goal-header">
-              <h3>{g.title}</h3>
+              <h4>{g.title}</h4>
               <button className="goal-delete-btn" onClick={() => deleteGoal(g._id)}>
                 &times;
               </button>
             </div>
-            <p className="goal-description">{g.description}</p>
+            {g.description && <p className="goal-description">{g.description}</p>}
             <GoalProgressBar current={g.currentAmount} target={g.targetAmount} />
             <div className="goal-deadline">Deadline: {new Date(g.deadline).toLocaleDateString()}</div>
             <form
