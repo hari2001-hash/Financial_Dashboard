@@ -30,7 +30,6 @@
   letter-spacing: 0.5px;
 }
 
-/* OAuth button styles */
 .oauth-btn {
   display: flex;
   align-items: center;
@@ -169,4 +168,22 @@
   .register-title {
     font-size: 1.3rem;
   }
+}
+
+
+
+
+
+
+
+.force-light, .force-light * {
+  background: initial !important;
+  color: initial !important;
+}
+
+
+.force-light, .force-light * {
+  background: unset !important;
+  color: #243c5a !important;
+  box-shadow: unset !important;
 }
