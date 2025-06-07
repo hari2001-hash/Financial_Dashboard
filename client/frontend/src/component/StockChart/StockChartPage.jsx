@@ -141,7 +141,7 @@ function Insights() {
 }
 
 export default function StockChartPage() {
-  const FINNHUB_API_KEY = "d1252bpr01qmhi3gfob0d1252bpr01qmhi3gfobg"; // Your Finnhub key
+  const FINNHUB_API_KEY = ""; // Your Finnhub key
   const SYMBOL = "AAPL";
 
   return (
