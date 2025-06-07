@@ -82,6 +82,9 @@ import ProfilePage from './component/ProfileUpdate/ProfilePage';
 import SecurityAndDataSettings from './component/MFA/SecurityAndDataSettings';
 import RegisterPage from './component/Register';
 import GoalDashboard from "./component/Goal/GoalProgressBar";
+import StockNews from "./component/StocksNews/StockNews";
+import StockChart from "./component/StockChart/StockChartPage" 
+
 
 // This inner component lets us use useLocation (must be inside Router)
 function AppRoutes({ darkMode, toggleDarkMode }) {
@@ -118,6 +121,13 @@ function AppRoutes({ darkMode, toggleDarkMode }) {
       <Route path="/mfa" element={<SecurityAndDataSettings />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/goal" element={<GoalDashboard />} />
+      <Route path="/stock" element={<StockNews/>} />
+      <Route path="/stockChart" element={<StockChart/>
+
+
+      }/>
+
+
     </Routes>
   );
 }

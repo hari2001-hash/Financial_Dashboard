@@ -546,6 +546,12 @@ export default function Dashboard({ darkMode, toggleDarkMode }) {
             <button onClick={toggleDarkMode} className="dashboard-btn-mode">
               {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
             </button>
+              <a
+              href="/stock"
+              className="dashboard-btn dashboard-btn-budget"
+            >
+              Stocks
+            </a>
                <a
               href="/goal"
               className="dashboard-btn dashboard-btn-budget"
