@@ -1,159 +1,111 @@
-import React, { useState, useEffect } from "react";
-import { Line } from "react-chartjs-2";
-import Chart from "chart.js/auto";
 
-// ---- Live Price Component ----
-function StockLivePrice({ symbol, apiKey }) {
-  const [price, setPrice] = useState(null);
 
-  useEffect(() => {
-    fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`)
-      .then((res) => res.json())
-      .then((data) => setPrice(data.c));
-  }, [symbol, apiKey]);
+import React, { useEffect, useState } from "react";
+import Chart from "react-apexcharts";
 
-  return (
-    <div style={{ marginBottom: 20 }}>
-      {price !== null ? (
-        <h2>
-          {symbol} Live Price: ${price.toFixed(2)}
-        </h2>
-      ) : (
-        <div>Loading price...</div>
-      )}
-    </div>
-  );
-}
+// You must get your own API key from https://www.alphavantage.co/support/#api-key
+const API_KEY = "YOUR_ALPHA_VANTAGE_API_KEY"; // <-- Replace this!
+const SYMBOL = "RELIANCE.BSE";
 
-// ---- Chart Component ----
-function StockChart({ symbol, apiKey }) {
-  const [chartData, setChartData] = useState(null);
+export default function RelianceCandleApex() {
+  const [series, setSeries] = useState([]);
+  const [lastRefreshed, setLastRefreshed] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    const now = Math.floor(Date.now() / 1000);
-    const monthAgo = now - 30 * 24 * 60 * 60;
-    console.log("now"+now);
-   console.log("monthAgo"+monthAgo);
+    async function fetchData() {
+      setLoading(true);
+      setError("");
+      try {
+        const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${SYMBOL}&outputsize=compact&apikey=${API_KEY}`;
+        const res = await fetch(url);
+        const data = await res.json();
 
-    
-    fetch(
-      `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=D&from=${monthAgo}&to=${now}&token=${apiKey}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.s === "ok") {
-          setChartData({
-            labels: data.t.map((ts) =>
-              new Date(ts * 1000).toLocaleDateString()
-            ),
-            datasets: [
-              {
-                label: `${symbol} Close Price`,
-                data: data.c,
-                fill: false,
-                borderColor: "rgb(75, 192, 192)",
-                tension: 0.1,
-              },
-            ],
-          });
+        if (data["Error Message"]) {
+          setError("API returned error: Invalid symbol or API error.");
+          setLoading(false);
+          return;
         }
-      });
-  }, [symbol, apiKey]);
+        if (data["Note"]) {
+          setError("API call frequency exceeded. Please wait and try again.");
+          setLoading(false);
+          return;
+        }
+        if (!data["Time Series (Daily)"]) {
+          setError("No data available from API.");
+          setLoading(false);
+          return;
+        }
 
-  return chartData ? (
-    <Line data={chartData} />
-  ) : (
-    <div>Loading chart...</div>
-  );
-}
+        const rawSeries = data["Time Series (Daily)"];
+        setLastRefreshed(data["Meta Data"]["3. Last Refreshed"]);
 
-// ---- Insights Card ----
-function Insights() {
-  // Example insights
-  const insights = {
-    topMovers: [
-      { symbol: "AAPL", name: "Apple", change: "+2.31%" },
-      { symbol: "TSLA", name: "Tesla", change: "+4.10%" },
-      { symbol: "NVDA", name: "Nvidia", change: "-1.24%" },
-    ],
-    marketSummary: {
-      SENSEX: "+0.88%",
-      NIFTY: "+0.73%",
-      NASDAQ: "-0.11%",
-      DOW: "+0.29%",
+        // Transform to Apex format: { x: Date, y: [open, high, low, close] }
+        const transformed = Object.entries(rawSeries)
+          .map(([date, values]) => ({
+            x: new Date(date),
+            y: [
+              parseFloat(values["1. open"]),
+              parseFloat(values["2. high"]),
+              parseFloat(values["3. low"]),
+              parseFloat(values["4. close"])
+            ]
+          }))
+          .sort((a, b) => a.x - b.x); // Oldest to newest
+
+        setSeries([{ data: transformed }]);
+        setLoading(false);
+      } catch (err) {
+        setError("Failed to fetch data from Alpha Vantage.");
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  const options = {
+    chart: {
+      type: 'candlestick',
+      height: 500,
+      toolbar: { show: true }
     },
-    trends: [
-      "AI stocks outperforming",
-      "Banking sector recovery",
-      "EV stocks gaining traction",
-    ],
+    title: {
+      text: 'Reliance Industries (RELIANCE.BSE) - Candlestick Chart',
+      align: 'center'
+    },
+    xaxis: {
+      type: 'datetime',
+      labels: { datetimeUTC: false }
+    },
+    yaxis: {
+      tooltip: { enabled: true },
+      title: { text: 'Price (INR)' }
+    },
+    noData: {
+      text: loading ? "Loading..." : "No data"
+    }
   };
 
   return (
-    <div className="insights-section" style={{ marginTop: 30 }}>
-      <div className="insight-card">
-        <h3>Top Movers</h3>
-        <ul>
-          {insights.topMovers.map((stock) => (
-            <li key={stock.symbol}>
-              <span className="stock-symbol">{stock.symbol}</span>
-              <span className="stock-name">{stock.name}</span>
-              <span
-                className={
-                  "stock-change " +
-                  (stock.change.startsWith("+") ? "up" : "down")
-                }
-              >
-                {stock.change}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="insight-card">
-        <h3>Market Summary</h3>
-        <ul className="market-summary">
-          {Object.entries(insights.marketSummary).map(([idx, val]) => (
-            <li key={idx}>
-              <span className="index-name">{idx}</span>
-              <span
-                className={
-                  "index-change " +
-                  (val.startsWith("+") ? "up" : "down")
-                }
-              >
-                {val}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="insight-card">
-        <h3>Trends</h3>
-        <ul>
-          {insights.trends.map((trend, i) => (
-            <li key={i}>• {trend}</li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-}
-
-export default function StockChartPage() {
-  const FINNHUB_API_KEY = "fgdxgfdgfhtfgxj"; // Your Finnhub key
-  const SYMBOL = "AAPL";
-
-  return (
-    <div className="stock-news-bg">
-      <div className="stock-news-container">
-        <h1 className="stock-news-title">Stock Chart & Insights</h1>
-        <div className="stock-chart-section">
-          <StockLivePrice symbol={SYMBOL} apiKey={FINNHUB_API_KEY} />
-          <StockChart symbol={SYMBOL} apiKey={FINNHUB_API_KEY} />
+    <div style={{
+      maxWidth: 950,
+      margin: "40px auto",
+      background: "#fff",
+      borderRadius: 10,
+      padding: 20,
+      boxShadow: "0 3px 12px #0001"
+    }}>
+      {error && (
+        <div style={{ color: "red", textAlign: "center", margin: 16 }}>{error}</div>
+      )}
+      <Chart options={options} series={series} type="candlestick" height={500} />
+      {lastRefreshed && (
+        <div style={{ fontSize: 12, color: "#666", marginTop: 8, textAlign: "center" }}>
+          Data source: Alpha Vantage, Last Refreshed: {lastRefreshed}
         </div>
-        <Insights />
-      </div>
+      )}
     </div>
   );
 }
