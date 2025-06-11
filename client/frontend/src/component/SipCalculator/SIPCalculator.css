@@ -1,0 +1,80 @@
+.sip-app-theme {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #213E60 0%, #1B2B45 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+}
+
+.sip-card {
+  max-width: 400px;
+  width: 90%;
+  background: rgba(255,255,255,0.06);
+  border-radius: 18px;
+  padding: 32px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #E2E6EA;
+}
+
+.sip-title {
+  font-weight: 700;
+  font-size: 28px;
+  margin: 0 0 18px 0;
+  color: #56CCF2;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.sip-input-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  justify-content: space-between;
+}
+
+.sip-label {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 0;
+  color: #A4B0C0;
+  flex: 1;
+}
+
+.sip-input {
+  width: 120px;
+  font-size: 17px;
+  padding: 7px 10px;
+  border-radius: 7px;
+  border: 1px solid #2F4868;
+  background: #22385B;
+  color: #E2E6EA;
+  outline: none;
+  margin-left: 16px;
+}
+
+.sip-results {
+  margin-top: 30px;
+  border-top: 1px solid #30425B;
+  padding-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sip-results-label {
+  font-size: 16px;
+  color: #A4B0C0;
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+.sip-results-value {
+  font-size: 19px;
+  color: #56CCF2;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  float: right;
+}

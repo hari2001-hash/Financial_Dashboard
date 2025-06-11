@@ -1,0 +1,80 @@
+.retire-app-theme {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #213E60 0%, #1B2B45 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+}
+
+.retire-card {
+  max-width: 430px;
+  width: 90%;
+  background: rgba(255,255,255,0.06);
+  border-radius: 18px;
+  padding: 32px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #E2E6EA;
+}
+
+.retire-title {
+  font-weight: 700;
+  font-size: 26px;
+  margin: 0 0 18px 0;
+  color: #56CCF2;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.retire-input-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  justify-content: space-between;
+}
+
+.retire-label {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 0;
+  color: #A4B0C0;
+  flex: 1;
+}
+
+.retire-input {
+  width: 120px;
+  font-size: 17px;
+  padding: 7px 10px;
+  border-radius: 7px;
+  border: 1px solid #2F4868;
+  background: #22385B;
+  color: #E2E6EA;
+  outline: none;
+  margin-left: 16px;
+}
+
+.retire-results {
+  margin-top: 30px;
+  border-top: 1px solid #30425B;
+  padding-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.retire-results-label {
+  font-size: 16px;
+  color: #A4B0C0;
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+.retire-results-value {
+  font-size: 21px;
+  color: #56CCF2;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  float: right;
+}

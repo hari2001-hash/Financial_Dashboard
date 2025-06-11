@@ -14,6 +14,10 @@ import RegisterPage from './component/Register';
 import GoalDashboard from "./component/Goal/GoalProgressBar";
 import StockNews from "./component/StocksNews/StockNews";
 import StockChart from "./component/StockChart/StockChartPage" 
+import CurrencyConverter from "./component/CurrencyConvertor/CurrencyConvertor";
+import LoanCalculator from "./component/LoanCalculator/LoanCalculator";
+import RetirementCalculator from "./component/RetirementCalculator/RetirementCalculator";
+import SIPCalculator from "./component/SipCalculator/SipCalculator";
 
 
 // This inner component lets us use useLocation (must be inside Router)
@@ -52,13 +56,11 @@ function AppRoutes({ darkMode, toggleDarkMode }) {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/goal" element={<GoalDashboard />} />
       <Route path="/stock" element={<StockNews/>} />
-      <Route path="/stockChart" element={<StockChart/>
-      
-
-
-      }/>
-
-
+      <Route path="/stockChart" element={<StockChart/> }/>
+      <Route path="/currency" element={<CurrencyConverter/> }/>
+      <Route path="/loan" element={<LoanCalculator/> }/>
+      <Route path="/retier" element={<RetirementCalculator/> }/>
+      <Route path="/sip" element={<SIPCalculator/> }/>
 
     </Routes>
           
