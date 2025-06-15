@@ -1,9 +1,11 @@
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'; // Only for local testing!
+
 const { Configuration, PlaidApi, PlaidEnvironments } = require('plaid');
 require('dotenv').config();
 
 // Plaid client setup
 const config = new Configuration({
-  basePath: PlaidEnvironments.sandbox, // or .production/.development
+  basePath: PlaidEnvironments.sandbox,
   baseOptions: {
     headers: {
       'PLAID-CLIENT-ID': process.env.PLAID_CLIENT_ID,
@@ -12,29 +14,34 @@ const config = new Configuration({
   },
 });
 const plaidClient = new PlaidApi(config);
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
+// Generate a sandbox access token dynamically
+async function getSandboxAccessToken() {
+  const publicTokenResponse = await plaidClient.sandboxPublicTokenCreate({
+    institution_id: 'ins_109508', // Plaid's test institution
+    initial_products: ['transactions'],
+  });
+  const publicToken = publicTokenResponse.data.public_token;
 
-// --- Stub: Replace with your DB logic ---
-async function getAllUsersWithPlaidAccessTokens() {
-  return [
-    { userId: 1, accessToken: 'access-sandbox-...' },
-    { userId: 2, accessToken: 'access-sandbox-...' }
-  ];
+  const accessTokenResponse = await plaidClient.itemPublicTokenExchange({
+    public_token: publicToken,
+  });
+
+  return accessTokenResponse.data.access_token;
 }
 
+// Save transactions stub
 async function saveTransactionsToDb(userId, transactions) {
   for (const tx of transactions) {
     // await db.insertTransaction({ userId, ...tx });
   }
 }
-// --- End stubs ---
 
-async function syncAllUserTransactions() {
-  const users = await getAllUsersWithPlaidAccessTokens();
+// The transaction sync function now takes users as a parameter
+async function syncAllUserTransactions(users) {
   for (const user of users) {
     try {
-      const startDate = '2025-06-15'; // You may want to use dynamic dates
+      const startDate = '2025-06-15'; // Use a dynamic date if needed
       const endDate = new Date().toISOString().split('T')[0];
 
       // Fetch transactions from Plaid
@@ -43,18 +50,15 @@ async function syncAllUserTransactions() {
         start_date: startDate,
         end_date: endDate,
         options: {
-          count: 100, // max per request
+          count: 100,
           offset: 0,
         },
       });
 
       const transactions = response.data.transactions;
 
-      // ---- LOGGING THE RESPONSE PAYLOAD ----
       console.log(`Plaid response for user ${user.userId}:`);
-      // Log the entire response for auditing
       console.dir(response.data, { depth: null, maxArrayLength: null });
-      // ---- END LOGGING ----
 
       await saveTransactionsToDb(user.userId, transactions);
 
@@ -65,4 +69,15 @@ async function syncAllUserTransactions() {
   }
 }
 
-module.exports = { syncAllUserTransactions };
+// Main runner: get the sandbox token and trigger sync
+(async () => {
+  try {
+    const accessToken = await getSandboxAccessToken();
+    const users = [
+      { userId: 1, accessToken }, // you can add more if needed
+    ];
+    await syncAllUserTransactions(users);
+  } catch (err) {
+    console.error('Error in sandbox sync:', err);
+  }
+})();
