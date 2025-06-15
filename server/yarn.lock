@@ -99,7 +99,7 @@
   "resolved" "https://registry.npmjs.org/aws-ssl-profiles/-/aws-ssl-profiles-1.1.2.tgz"
   "version" "1.1.2"
 
-"axios@^1.9.0":
+"axios@^1.7.4", "axios@^1.9.0":
   "integrity" "sha512-re4CqKTJaURpzbLHtIi6XpDv20/CnpXOtjRY5/CU32L8gU8ek9UIivcfvSWvmKEngmVbrUtPpdDwWDWL7DNHvg=="
   "resolved" "https://registry.npmjs.org/axios/-/axios-1.9.0.tgz"
   "version" "1.9.0"
@@ -864,10 +864,10 @@
   "resolved" "https://registry.npmjs.org/node-addon-api/-/node-addon-api-8.3.1.tgz"
   "version" "8.3.1"
 
-"node-cron@^4.0.7":
-  "integrity" "sha512-A37UUDpxRT/kWanELr/oMayCWQFk9Zx9BEUoXrAKuKwKzH4XuAX+vMixMBPkgZBkADgJwXv91w5cMRTNSVP/mA=="
-  "resolved" "https://registry.npmjs.org/node-cron/-/node-cron-4.0.7.tgz"
-  "version" "4.0.7"
+"node-cron@^4.1.0":
+  "integrity" "sha512-OS+3ORu+h03/haS6Di8Qr7CrVs4YaKZZOynZwQpyPZDnR3tqRbwJmuP2gVR16JfhLgyNlloAV1VTrrWlRogCFA=="
+  "resolved" "https://registry.npmjs.org/node-cron/-/node-cron-4.1.0.tgz"
+  "version" "4.1.0"
 
 "node-gyp-build@^4.8.4":
   "integrity" "sha512-LA4ZjwlnUblHVgq0oBF3Jl/6h/Nvs5fzBLwdEF4nuxnFdsfajde4WfxtJr3CaiH+F6ewcIB/q4jQ4UzPyid+CQ=="
@@ -983,6 +983,13 @@
   "integrity" "sha512-KG8UEiEVkR3wGEb4m5yZkVCzigAD+cVEJck2CzYZO37ZGJfctvVptVO192MwrtPhzONn6go8ylnOdMhKqi4nfg=="
   "resolved" "https://registry.npmjs.org/pause/-/pause-0.0.1.tgz"
   "version" "0.0.1"
+
+"plaid@^36.0.0":
+  "integrity" "sha512-Qw1DJkq4xhXcb7gDFiJPLyzYEqlTbJpJr4r0RcekMed9tpZ16RG5gzUfDO9w+ZHr6AVwDaXVa2IZlECp41yQWw=="
+  "resolved" "https://registry.npmjs.org/plaid/-/plaid-36.0.0.tgz"
+  "version" "36.0.0"
+  dependencies:
+    "axios" "^1.7.4"
 
 "pngjs@^5.0.0":
   "integrity" "sha512-40QW5YalBNfQo5yRYmiw7Yz6TKKVr3h6970B2YE+3fQpsWcrbj1PzJgxeJ19DRQjhMbKPIuMY8rFaXc8moolVw=="
