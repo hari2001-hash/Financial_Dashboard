@@ -8,7 +8,6 @@ const passport = require('passport');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-
 const app = express();
 
 // MongoDB connection
@@ -225,6 +224,7 @@ const profileRouter = require("./routes/profile");
 app.use("/api/profile", profileRouter);
 
 
+
 const goalsRoutes = require('./routes/goals');
 app.use('/api/goals', goalsRoutes);
 // const profileRouter = require("./routes/profile");
@@ -234,7 +234,6 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-
 
 
 
