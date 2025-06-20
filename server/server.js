@@ -9,6 +9,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const app = express();
+const { sandBoxSync } = require('./services/sandboxSyncAndTrasnact');
 
 // MongoDB connection
 const MONGO_URI = process.env.MONGO_URI || 'your-mongo-uri-here';
@@ -230,6 +231,17 @@ app.use('/api/goals', goalsRoutes);
 // const profileRouter = require("./routes/profile");
 // app.use("/api/profile", profileRouter);
 // Start server
+
+app.get('/api/plaid-data', async (req, res) => {
+  try {
+    console.log("API /api/plaid-data called");
+    const plaidData = await sandBoxSync();
+    res.json(plaidData);
+  } catch (err) {
+    console.error('Error in /api/plaid-data:', err); // This is what you need to copy/paste here
+    res.status(500).json({ error: err.message || err });
+  }
+});
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
