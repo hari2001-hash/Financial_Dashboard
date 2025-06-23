@@ -233,6 +233,9 @@ app.use(express.json()); // <-- Make sure this is present!
 const profileRouter = require("./routes/profile");
 app.use("/api/profile", profileRouter);
 
+const userRoutes = require('./routes/users');
+app.use(userRoutes);
+app.use('/users', require('./routes/users'));
 
 
 const goalsRoutes = require('./routes/goals');

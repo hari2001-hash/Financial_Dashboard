@@ -19,6 +19,7 @@ import LoanCalculator from "./component/LoanCalculator/LoanCalculator";
 import RetirementCalculator from "./component/RetirementCalculator/RetirementCalculator";
 import SIPCalculator from "./component/SipCalculator/SipCalculator";
 import PlaidDashboard from "./component/PlaidDashboard/PlaidDashboard";
+import UserProfile from "./component/UserProfile/UserProfile";
 
 
 // This inner component lets us use useLocation (must be inside Router)
@@ -63,6 +64,8 @@ function AppRoutes({ darkMode, toggleDarkMode }) {
       <Route path="/retier" element={<RetirementCalculator/> }/>
       <Route path="/sip" element={<SIPCalculator/> }/>
      <Route path="/pl" element={<PlaidDashboard/> }/>
+          <Route path="/user" element={<UserProfile/> }/>
+
 
 
     </Routes>
