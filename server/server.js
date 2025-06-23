@@ -206,6 +206,15 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
+app.get('/api/plaid-data', async (req, res) => {
+  try {
+    // sandBoxSync should return the array of transactions
+    const transactions = await sandBoxSync(); // Make sure this returns transactions array!
+    res.json(transactions); // Or { transactions }, or { accounts, transactions }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 const transactionsRouter = require("./routes/Transactions");
 app.use("/api/transactions", transactionsRouter);
@@ -232,16 +241,16 @@ app.use('/api/goals', goalsRoutes);
 // app.use("/api/profile", profileRouter);
 // Start server
 
-app.get('/api/plaid-data', async (req, res) => {
-  try {
-    console.log("API /api/plaid-data called");
-    const plaidData = await sandBoxSync();
-    res.json(plaidData);
-  } catch (err) {
-    console.error('Error in /api/plaid-data:', err); // This is what you need to copy/paste here
-    res.status(500).json({ error: err.message || err });
-  }
-});
+// app.get('/api/plaid-data', async (req, res) => {
+//   try {
+//     console.log("API /api/plaid-data called");
+//     const plaidData = await sandBoxSync();
+//     res.json(plaidData);
+//   } catch (err) {
+//     console.error('Error in /api/plaid-data:', err); // This is what you need to copy/paste here
+//     res.status(500).json({ error: err.message || err });
+//   }
+// });
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
