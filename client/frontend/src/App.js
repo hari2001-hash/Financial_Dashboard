@@ -8,7 +8,6 @@ import Dashboard from './component/Dashboard/Dashboard';
 import './App.css';
 import LoginPage from './component/Login/login';
 import BudgetSection from './component/Budget/BudgetSection';
-import ProfilePage from './component/ProfileUpdate/ProfilePage';
 import SecurityAndDataSettings from './component/MFA/SecurityAndDataSettings';
 import RegisterPage from './component/Register';
 import GoalDashboard from "./component/Goal/GoalProgressBar";
@@ -19,7 +18,6 @@ import LoanCalculator from "./component/LoanCalculator/LoanCalculator";
 import RetirementCalculator from "./component/RetirementCalculator/RetirementCalculator";
 import SIPCalculator from "./component/SipCalculator/SipCalculator";
 import PlaidDashboard from "./component/PlaidDashboard/PlaidDashboard";
-import UserProfile from "./component/UserProfile/UserProfile";
 
 
 // This inner component lets us use useLocation (must be inside Router)
@@ -53,7 +51,6 @@ function AppRoutes({ darkMode, toggleDarkMode }) {
       />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/budget" element={<BudgetSection darkMode={darkMode} />} />
-      <Route path="/profile" element={<ProfilePage />} />
       <Route path="/mfa" element={<SecurityAndDataSettings />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/goal" element={<GoalDashboard />} />
@@ -64,7 +61,6 @@ function AppRoutes({ darkMode, toggleDarkMode }) {
       <Route path="/retier" element={<RetirementCalculator/> }/>
       <Route path="/sip" element={<SIPCalculator/> }/>
      <Route path="/pl" element={<PlaidDashboard/> }/>
-          <Route path="/user" element={<UserProfile/> }/>
 
 
 
