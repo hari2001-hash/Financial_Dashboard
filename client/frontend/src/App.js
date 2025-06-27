@@ -61,9 +61,6 @@ function AppRoutes({ darkMode, toggleDarkMode }) {
       <Route path="/retier" element={<RetirementCalculator/> }/>
       <Route path="/sip" element={<SIPCalculator/> }/>
      <Route path="/pl" element={<PlaidDashboard/> }/>
-
-
-
     </Routes>
           
 
