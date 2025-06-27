@@ -40,7 +40,7 @@ export default function CurrencyConverter() {
       .catch(() => setError("Failed to fetch rates."));
   }, [from, to, amount]);
 
-  // ---- Application Theme Styles ---
+  // --- Application Theme Styles ---
   const appTheme = {
     background: "linear-gradient(135deg, #213E60 0%, #1B2B45 100%)",
     minHeight: "100vh",
