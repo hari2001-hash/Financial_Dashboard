@@ -20,7 +20,6 @@ import SIPCalculator from "./component/SipCalculator/SipCalculator";
 import PlaidDashboard from "./component/PlaidDashboard/PlaidDashboard";
 
 
-// This inner component lets us use useLocation (must be inside Router)
 function AppRoutes({ darkMode, toggleDarkMode }) {
   const location = useLocation();
 
