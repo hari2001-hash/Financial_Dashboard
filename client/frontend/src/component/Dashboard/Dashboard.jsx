@@ -15,7 +15,46 @@ function formatCurrency(amount) {
   return amount?.toLocaleString("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 2 }) || "₹0.00";
 }
 
+
 export default function Dashboard({ darkMode, toggleDarkMode }) {
+const handleOAuthLogout = () => {
+  // Clear all local authentication data
+  localStorage.clear();
+  sessionStorage.clear();
+  
+  // Clear browser history and push login page
+  window.location.replace('/login'); // Replace current history entry
+  
+  // Alternative: Manipulate history stack
+  // history.pushState(null, null, '/login');
+  // window.onpopstate = () => window.location.replace('/login');
+};
+
+const getOAuthLogoutUrl = (provider) => {
+  const baseUrl = window.location.origin;
+  
+  switch(provider) {
+    case 'google':
+      return `https://accounts.google.com/logout?continue=${encodeURIComponent(baseUrl + '/login')}`;
+      
+    case 'github':
+      return `https://github.com/logout?redirect_uri=${encodeURIComponent(baseUrl + '/login')}`;
+      
+    case 'microsoft':
+      return `https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri=${encodeURIComponent(baseUrl + '/login')}`;
+      
+    case 'auth0':
+      return `/v2/logout?client_id=YOUR_CLIENT_ID&returnTo=${encodeURIComponent(baseUrl + '/login')}`;
+      
+    default:
+      return `${baseUrl}/login`;
+  }
+};
+
+
+
+
+const [oauthProvider, setOauthProvider] = useState('google');
   const [user, setUser] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [assets, setAssets] = useState([]);
@@ -93,13 +132,15 @@ export default function Dashboard({ darkMode, toggleDarkMode }) {
   const [uploadError, setUploadError] = useState("");
   const [uploadSuccess, setUploadSuccess] = useState("");
 
+
+  
   const navigate = useNavigate();
 
   // Initial fetch
   useEffect(() => {
     async function fetchAll() {
       try {
-        const userRes = await fetch("http://localhost:5000/api/user", { credentials: "include" });
+        const userRes = await fetch("http://localhost:5000/api/user", { credentials: "include" },);
         const userData = await userRes.json();
         if (!userData || !userData.email) {
           navigate("/login");
@@ -564,12 +605,12 @@ export default function Dashboard({ darkMode, toggleDarkMode }) {
             >
               Budget
             </a>
-            <a
-              href="http://localhost:5000/logout"
-              className="dashboard-btn dashboard-btn-logout"
-            >
-              Logout
-            </a>
+         <button 
+  className="dashboard-btn dashboard-btn-logout"
+  onClick={handleOAuthLogout}
+>
+  Logout
+</button>
           </div>
         </div>
 

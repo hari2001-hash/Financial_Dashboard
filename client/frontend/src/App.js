@@ -18,7 +18,8 @@ import LoanCalculator from "./component/LoanCalculator/LoanCalculator";
 import RetirementCalculator from "./component/RetirementCalculator/RetirementCalculator";
 import SIPCalculator from "./component/SipCalculator/SipCalculator";
 import PlaidDashboard from "./component/PlaidDashboard/PlaidDashboard";
-
+import profile from "./component/ProfileUpdate/ProfileUpdate";
+import ProfileUpdate from "./component/ProfileUpdate/ProfileUpdate";
 
 function AppRoutes({ darkMode, toggleDarkMode }) {
   const location = useLocation();
@@ -60,6 +61,10 @@ function AppRoutes({ darkMode, toggleDarkMode }) {
       <Route path="/retier" element={<RetirementCalculator/> }/>
       <Route path="/sip" element={<SIPCalculator/> }/>
      <Route path="/pl" element={<PlaidDashboard/> }/>
+
+     <Route path="/profile" element={<ProfileUpdate/> }/>
+
+
     </Routes>
           
 

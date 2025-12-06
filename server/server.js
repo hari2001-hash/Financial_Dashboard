@@ -10,6 +10,7 @@ const mongoose = require('mongoose');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const app = express();
 const { sandBoxSync } = require('./services/sandboxSyncAndTrasnact');
+const jwt = require('jsonwebtoken');
 
 // MongoDB connection
 const MONGO_URI = process.env.MONGO_URI || 'your-mongo-uri-here';
@@ -145,6 +146,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+
 // API: get current user info (for frontend session check)
 app.get('/api/user', (req, res) => {
   if (!req.isAuthenticated || !req.isAuthenticated()) {
@@ -246,11 +248,12 @@ mongoose.connect(process.env.MONGO_URI, {
   .catch(err => console.error('MongoDB error:', err));
 
 app.use('/users', require('./routes/users'));
+app.use('/api/profile', require('./routes/profile'));
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-
 
 
 

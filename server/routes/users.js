@@ -1,15 +1,10 @@
-
-
-
-
-
-
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const auth = require('../middleware/auth'); // <-- Add this line
+const jwtAuth = require('../middleware/jwtAuth')
 
 // Register route
 router.post('/register', async (req, res) => {
@@ -34,8 +29,8 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Login route
-router.post('/login', async (req, res) => {
+// // Login route
+router.post('/login', jwtAuth,async (req, res) => {
   const { email, password } = req.body;
   try {
     let user = await User.findOne({ email });
@@ -53,5 +48,7 @@ router.post('/login', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
+
 
 module.exports = router;
